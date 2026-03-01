@@ -4,6 +4,7 @@ import time
 import random
 import math
 
+# Window dimensions
 winW = 900
 winH = 800
 topH = 60
@@ -12,6 +13,7 @@ offX = 50
 offY = topH + 20
 cellSz = 25
 
+# Colors
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
@@ -30,9 +32,9 @@ class Cell:
         self.isFrontier = False
         self.isVisited = False
         self.isPath = False
-        self.g = float(0)
+        self.g = float('inf')
         self.h = 0
-        self.f = float(0)
+        self.f = float('inf')
         self.parent = None
 
 class Grid:
@@ -76,9 +78,9 @@ class Grid:
     def resetCosts(self):
         for row in self.cells:
             for cell in row:
-                cell.g = float(0)
+                cell.g = float('inf')
                 cell.h = 0
-                cell.f = float(0)
+                cell.f = float('inf')
                 cell.parent = None
 
     def getCellFromPixel(self, x, y):
@@ -194,14 +196,17 @@ def spawnObstacle(grid, agentPos):
 def drawGrid(screen, grid, font):
     screen.fill(WHITE)
 
+    # Top bar
     pygame.draw.rect(screen, BLACK, (0, 0, winW, topH))
     info = f"Algo: {algo} | Heur: {heurName} | Dynamic: {'ON' if dyn else 'OFF'} | Nodes: {metrics['Nodes']} | Cost: {metrics['Cost']} | Time: {metrics['Time']} ms"
     screen.blit(font.render(info, True, WHITE), (10, 20))
 
+    # Bottom bar
     pygame.draw.rect(screen, BLACK, (0, winH - botH, winW, botH))
     instr = "Click: toggle obstacle | S: set start | G: set goal | SPACE: search | M: move | R: reset | A: toggle algo | H: toggle heur | D: toggle dynamic"
     screen.blit(font.render(instr, True, WHITE), (10, winH - botH + 10))
 
+    # Grid cells
     for row in grid.cells:
         for c in row:
             rect = pygame.Rect(offX + c.y * cellSz, offY + c.x * cellSz, cellSz, cellSz)
